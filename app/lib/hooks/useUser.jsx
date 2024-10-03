@@ -20,7 +20,7 @@ export default function useUser () {
                 mutate({
                     name: response.name,
                     phone: response.phone,
-                    balance: response.balance
+                    balance: parseFloat(response.balance)
                 })
                 setIsLogged(true)
             }
@@ -51,7 +51,14 @@ export default function useUser () {
     }
 
     useEffect(()=>{
-        if(!isLoading && !isError) if(data?.name) setIsLogged(true)
+        if(!isLoading && !isError) if(data?.name){
+            setIsLogged(true)
+            mutate({
+                name: data.name,
+                phone: data.phone,
+                balance: parseFloat(data.balance)
+            })
+        }
     },[data])
 
     return {
