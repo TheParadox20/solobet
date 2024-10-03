@@ -35,7 +35,7 @@ export default function useUser () {
                 mutate({
                     name: response.name,
                     phone: response.phone,
-                    balance: response.balance
+                    balance: parseFloat(response.balance)
                 })
                 setIsLogged(true)
             }
