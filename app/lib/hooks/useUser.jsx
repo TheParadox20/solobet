@@ -1,4 +1,5 @@
 import { useEffect, useContext } from "react";
+import { useAccount, useDisconnect } from 'wagmi'
 import { Context } from "@/app/lib/ContextProvider";
 import useSWR from "swr";
 import { fetcher, postData } from "@/app/lib/data";
@@ -6,11 +7,25 @@ import { save, load, remove } from "@/app/lib/storage";
 
 export default function useUser () {
     let {setIsLogged} = useContext(Context);
+    const account = useAccount()
+    const { disconnect } = useDisconnect()
     const { data, isError, isLoading, mutate } = useSWR(['/user',{}], fetcher)
 
     let logout = ()=>{
         remove('token');
+        disconnect();
         setIsLogged(false)
+    }
+
+    if(account.status === 'connected'){
+        mutate({
+            name: account.addresses,
+            phone: 0,
+            balance: parseFloat(0),
+            web3:true,
+            chain:account.chainId
+        })
+        setIsLogged(true)
     }
 
     let login = (phone, password,worker)=>{

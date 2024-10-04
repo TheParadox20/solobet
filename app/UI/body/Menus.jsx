@@ -4,7 +4,7 @@ import { Context } from "@/app/lib/ContextProvider";
 import Link from "next/link"
 import { usePathname, useSearchParams, useParams } from "next/navigation";
 import Logo from "@/app/UI/body/Logo";
-import { hide, show, nowYouSee, nowYouDont, toggle, isVisible } from "@/app/lib/controlls";
+import { hide, show, toggle, isVisible } from "@/app/lib/controlls";
 import { overlayE } from "@/app/lib/trigger";
 import SportIcon from "@/app/UI/SportsIcon";
 import useUser from "@/app/lib/hooks/useUser";
@@ -13,6 +13,7 @@ import Deposit from "./Deposit";
 import Withdraw from "./Withdraw";
 
 export function MobileBottomMenu(){
+    let {isLogged} = useContext(Context);
     let pathname = usePathname();
     let pages = [
         {
@@ -31,9 +32,9 @@ export function MobileBottomMenu(){
             text:'My Bets'
         },
         {
-            href:'/account',
-            icon:'icon-[ph--user-circle-light]',
-            text:'Account'
+            href:'/P2E',
+            icon:'icon-[fa6-solid--dice]',
+            text:'P2E'
         }
     ]
 
@@ -46,6 +47,13 @@ export function MobileBottomMenu(){
                         <span className="truncate text-xs font-bold text-center">{page.text}</span>
                     </Link>
                 ))
+            }
+            {
+                isLogged &&
+                <Link href={'/account'} className={`flex flex-col items-center ${('/'==='/account'&&pathname.length==1)?'text-primary-light':'/account'!=='/'&&pathname.includes('/account')?'text-primary-light':'text-LightGray'} `}>
+                    <div className=""><span className={`icon-[ph--user-circle-light] w-7 h-7`}/></div>
+                    <span className="truncate text-xs font-bold text-center">Account</span>
+                </Link>
             }
         </div>
     )
@@ -188,7 +196,8 @@ export function TopMenu(){
                     <Link className={`${pathname==='/'?'text-primary-light':'text-LightGray'} font-semibold`} href="/">Home</Link>
                     <Link className={`${pathname.includes('/sports')?'text-primary-light':'text-LightGray'} font-semibold`} href="/sports">Sports</Link>
                     <Link className={`${pathname==='/bets'?'text-primary-light':'text-LightGray'} font-semibold`} href="/bets">My Bets</Link>
-                    <Link className={`${pathname.includes('/account')?'text-primary-light':'text-LightGray'} font-semibold`} href="/account">Account</Link>
+                    <Link className={`${pathname.includes('/p2e')?'text-primary-light':'text-LightGray'} font-semibold`} href="/P2E">P2E</Link>
+                    {isLogged && <Link className={`${pathname.includes('/account')?'text-primary-light':'text-LightGray'} font-semibold`} href="/account">Account</Link>}
                 </div>
                 {
                     isLogged && !error && !isLoading?

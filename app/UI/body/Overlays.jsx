@@ -4,6 +4,7 @@ import Overlay from "./Overlay"
 import Login from "./Login"
 import Signup from "./Signup"
 import Deposit from "./Deposit"
+import Wallets from "./Wallets"
 
 export default function Overlays(){
     let [page, setPage] = useState('')
@@ -20,6 +21,7 @@ export default function Overlays(){
             {page=='/login' && <Login control={setPage}/>}
             {page=='/signup' && <Signup control={setPage}/>}
             {page=='/deposit' && <Deposit/>}
+            {page=='/wallets' && <Wallets/>}
         </Overlay>
     )
 }
