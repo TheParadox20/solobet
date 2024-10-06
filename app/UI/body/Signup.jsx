@@ -21,7 +21,8 @@ export default function Signup({control}){
             return
         }
         signUp(name,phone,password,(_)=>{
-            if(load('token')!=null) control('')
+            if(load('token')!=null);
+            control('');
         })
     }
 

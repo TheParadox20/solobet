@@ -15,7 +15,8 @@ export default function Login({control}){
     let submit = (e)=>{
         e.preventDefault();
         login(phone,password,(_)=>{
-            if(load('token')!=null) control('')
+            if(load('token')!=null);
+            control('');
         })
     }
 

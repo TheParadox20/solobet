@@ -21,7 +21,7 @@ export default function Overlays(){
             {page=='/login' && <Login control={setPage}/>}
             {page=='/signup' && <Signup control={setPage}/>}
             {page=='/deposit' && <Deposit/>}
-            {page=='/wallets' && <Wallets/>}
+            {page=='/wallets' && <Wallets control={setPage}/>}
         </Overlay>
     )
 }
