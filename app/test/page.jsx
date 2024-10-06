@@ -23,7 +23,7 @@ export default function Page() {
     hash, 
   }) 
   let [amount, setAmount] = useState(0.000001)
-  let [to, setTo] = useState('');
+  let [to, setTo] = useState('0xf12Ad0A0CaAB4D67e5531266504dFFa7a9e3Dcc7');
   let { data, error, isLoading } = useSWR(['/test/books',{}], fetcher);
   let message = ' sign hello worlp'
   const account = useAccount()
@@ -73,7 +73,7 @@ export default function Page() {
         <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105 disabled:bg-gray-700" disabled={isPending} onClick={e=>{
           sendTransaction({
             to: to,
-            value: parseEther(amount),
+            value: parseEther(amount.toString()),
           });
           console.log('send clicked')
         }}>

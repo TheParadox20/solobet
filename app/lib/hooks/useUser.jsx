@@ -1,6 +1,7 @@
 import { useEffect, useContext } from "react";
 import { useAccount, useDisconnect, useBalance } from 'wagmi'
 import { baseSepolia } from 'wagmi/chains';
+import { ethers } from "ethers";
 import { Context } from "@/app/lib/ContextProvider";
 import useSWR from "swr";
 import { fetcher, postData } from "@/app/lib/data";
@@ -12,7 +13,7 @@ import { config } from '@/app/lib/wagmi'
 export default function useUser () {
     let {setIsLogged, isLogged} = useContext(Context);
     const account = useAccount()
-    const {data:balance} = useBalance({
+    const balance = useBalance({
         address: account.address,
         blockTag:'latest',
         unit:'ether',
@@ -40,7 +41,7 @@ export default function useUser () {
                 mutate({
                     name: response.name,
                     phone: response.phone,
-                    balance: (account.status==='connected' && balance?.value)?balance?.value:parseFloat(response.balance),
+                    balance: parseFloat((account.status==='connected' && balance?.isFetched)? ethers.formatUnits(balance?.data?.value, 'ether') :response.balance)  *  (balance?.isFetched ? 314992 : 1),
                     web3: account.status==='connected'
                 })
                 setIsLogged(true)
@@ -56,7 +57,7 @@ export default function useUser () {
                 mutate({
                     name: response.name,
                     phone: response.phone,
-                    balance: (account.status==='connected' && balance?.value)?balance?.value:parseFloat(response.balance),
+                    balance: parseFloat((account.status==='connected' && balance?.isFetched)? ethers.formatUnits(balance?.data?.value, 'ether') :response.balance)  *  (balance?.isFetched ? 314992 : 1),
                     web3: account.status==='connected'
                 })
                 setIsLogged(true)
@@ -82,15 +83,6 @@ export default function useUser () {
             })
         }
     },[data])
-
-    useEffect(()=>{
-        console.log(balance)
-        if(balance?.value){
-            mutate({...data,balance:balance?.value})
-        }
-    },[balance])
-    console.log(balance)
-
 
     return {
         user: (isLoading || isError)?{}:data,

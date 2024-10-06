@@ -119,7 +119,7 @@ export function MobileSideMenu(){
                     <div className="border-b-[1px] border-Grey py-2 pb-4">
                         <div className="flex justify-between">
                             <div className="flex flex-col">
-                                <span className="font-bold text-left">KES {user['balance'].toFixed(2)}</span>
+                                <span className="font-bold text-left">{user.web3?'ETH':'KES'} {user['balance'].toFixed(2)}</span>
                                 <span className=" text-left">Balance</span>
                             </div>
                             <button className="flex items-center p-1 rounded-lg border-2 border-primary-light"><span className="icon-[mdi--eye-off-outline] w-8 h-8"/></button>
@@ -205,7 +205,7 @@ export function TopMenu(){
                         <button onClick={e=>{toggle('mobile_side_menu'); isVisible('mobile_side_menu')?show('mobile_side_menu'):hide('mobile_side_menu')}} className="flex justify-center items-center gap-2">
                             <div className="icon-[ph--user-circle-light] w-10 h-10 2xl:w-12 2xl:h-12"/>
                             <div className="flex flex-col">
-                                <span className="font-bold text-left">KES {user['balance'].toFixed(2)}</span>
+                                <span className="font-bold text-left">{user.web3?'ETH':'KES'} {user['balance'].toFixed(2)}</span>
                                 <span className=" text-left">Balance</span>
                             </div>
                             <div className="icon-[entypo--chevron-small-down] w-10 h-10"/>
