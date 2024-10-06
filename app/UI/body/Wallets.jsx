@@ -1,12 +1,54 @@
-import { useConnect } from 'wagmi'
+import { useRef } from 'react'
+import { useConnect, useSignMessage, useAccount, useDisconnect } from 'wagmi'
+import useUser from '@/app/lib/hooks/useUser'
+import { getData } from '@/app/lib/data'
+import { config } from '@/app/lib/wagmi'
+import { popupE, overlayE } from '@/app/lib/trigger'
 
 export default function Wallets({control}){
-    const { connectors, connect, status, error } = useConnect({
+    let {login, signUp} = useUser();
+    const account = useAccount()
+    const { disconnect } = useDisconnect()
+
+    let {signMessage, error:signError, data:signature, status:signStatus } = useSignMessage({
+        config,
         mutation:{
             onSuccess:(data)=>{
-                console.log(data)
+                if(existingRef.current){//login
+                    login(account.address,data,(_)=>{control('')})
+                }else{//signup
+                    signUp(
+                        account.address,
+                        account.address,
+                        data,
+                        (_)=>{control('')}
+                    )
+                }
+            },
+            onError:(error)=>{
+                popupE('Error',`Error when signing message: ${error}`)
             }
-        },
+        }
+    })
+
+    let existingRef = useRef(null);
+
+    let connectWalletSuccess = (_)=>{
+        getData((response)=>{
+            existingRef.current = response.active;
+            signMessage({account:account.address,message:'solobet.vercel.app'})
+        },'/web3/check',{wallet:account.address})
+    }
+
+    const { connectors, connect, status, error } = useConnect({
+        config,
+        mutation:{
+            onSuccess:(_)=>{connectWalletSuccess(_)},
+            onError:(error)=>{
+                popupE('Error',`Wallet connection error: ${error.message}`);
+                disconnect();
+            }
+        }
     })
 
     let getIcon = (wallet)=>{
@@ -22,12 +64,12 @@ export default function Wallets({control}){
         }
     }
 
-    console.log(error?.message)
-    console.log(status)
-
     return(
         <div className="bg-primary-base p-4 rounded-lg flex flex-col gap-1">
-            <p className="my-2 text-lg font-semibold">Connect Wallet</p>
+            <div className="my-3 flex justify-between items-center gap-12">
+                <p className="text-lg font-semibold">Connect Wallet</p>
+                <button className="w-7 h-7 icon-[lets-icons--back]" onClick={e=>control('')}/>
+            </div>
             {
                 connectors.map((connector) => (
                 <button

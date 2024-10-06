@@ -1,14 +1,16 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createContext } from "react";
 import useSWR from "swr";
+import { useAccount } from 'wagmi'
 import { fetcher } from "./data";
 import Spinner from "@/app/UI/body/Spinner";
 
 export let Context = createContext();
 
 export default function ContextProvider({ children }) {
-    let [isLogged, setIsLogged] = useState(false);
+    const account = useAccount()
+    let [isLogged, setIsLogged] = useState(account.status==='connected');
     let { data, error, isLoading } = useSWR(['/menu',{}], fetcher,{
         revalidateOnFocus: false,
         revalidateOnReconnect: false,

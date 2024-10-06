@@ -1,20 +1,29 @@
 import { useEffect, useContext } from "react";
-import { useAccount, useDisconnect } from 'wagmi'
+import { useAccount, useDisconnect, useBalance } from 'wagmi'
+import { baseSepolia } from 'wagmi/chains';
 import { Context } from "@/app/lib/ContextProvider";
 import useSWR from "swr";
 import { fetcher, postData } from "@/app/lib/data";
 import { save, load, remove } from "@/app/lib/storage";
+import { config } from '@/app/lib/wagmi'
 
 // 0xf12Ad0A0CaAB4D67e5531266504dFFa7a9e3Dcc7
 // 0x5Ed7293FC6aFc86A7E5c54F4A320C93DA812BF02
 export default function useUser () {
-    let {setIsLogged} = useContext(Context);
+    let {setIsLogged, isLogged} = useContext(Context);
     const account = useAccount()
+    const {data:balance} = useBalance({
+        address: account.address,
+        blockTag:'latest',
+        unit:'ether',
+        config: config,
+        chainId: baseSepolia.id
+    })
     const { disconnect } = useDisconnect()
     const { data, isError, isLoading, mutate } = useSWR(['/user',{}], fetcher, {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
-        revalidateOnMount: true,
+        revalidateOnMount: false,
         errorRetryInterval: 15000
     })
 
@@ -31,7 +40,8 @@ export default function useUser () {
                 mutate({
                     name: response.name,
                     phone: response.phone,
-                    balance: parseFloat(response.balance)
+                    balance: (account.status==='connected' && balance?.value)?balance?.value:parseFloat(response.balance),
+                    web3: account.status==='connected'
                 })
                 setIsLogged(true)
             }
@@ -46,7 +56,8 @@ export default function useUser () {
                 mutate({
                     name: response.name,
                     phone: response.phone,
-                    balance: parseFloat(response.balance)
+                    balance: (account.status==='connected' && balance?.value)?balance?.value:parseFloat(response.balance),
+                    web3: account.status==='connected'
                 })
                 setIsLogged(true)
             }
@@ -71,6 +82,15 @@ export default function useUser () {
             })
         }
     },[data])
+
+    useEffect(()=>{
+        console.log(balance)
+        if(balance?.value){
+            mutate({...data,balance:balance?.value})
+        }
+    },[balance])
+    console.log(balance)
+
 
     return {
         user: (isLoading || isError)?{}:data,

@@ -9,11 +9,14 @@ import { config } from "@/app/lib/wagmi";
 import { parseEther } from "ethers";
 import Input from "../UI/Input";
 import ConnectWallet from "@/app/UI/body/ConnectWallet";
-// import Signer from "./Signer";
 
 export default function Page() {
-  let {signMessage, error:signError} = useSignMessage({config})
-  const { sendTransaction, hash, error:txError, isPending, data:signature, status:sigStatus } = useSendTransaction({
+  let {signMessage, error:signError, data:signature, status:sigStatus } = useSignMessage({config,
+    mutation:{
+      onSuccess:(data)=>{alert(data)}
+    }
+  })
+  const { sendTransaction, hash, error:txError, isPending} = useSendTransaction({
     config,
   })
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ 
@@ -22,13 +25,13 @@ export default function Page() {
   let [amount, setAmount] = useState(0.000001)
   let [to, setTo] = useState('');
   let { data, error, isLoading } = useSWR(['/test/books',{}], fetcher);
-  let message = ' sign hello world'
+  let message = ' sign hello worlp'
   const account = useAccount()
  
-  // if (error){
-  //   console.log(error)
-  //   return <div>failed to load</div>
-  // }
+  if (error){
+    console.log(error)
+    return <div>failed to load</div>
+  }
   if (isLoading) return <div>loading...</div>
   return (
     <div>
@@ -36,19 +39,22 @@ export default function Page() {
           <h1>Workbench</h1>
           <div className="icon-[token--bets] w-8 h-8 text-green-500"/>
         </div>
-        {/* {
+        {
           data.map((book) => (
             <div key={book.id}>
               <h2>{book.name}</h2>
               <p>{book.author}</p>
             </div>
           ))
-        } */}
+        }
         <h4>Buttons</h4>
         <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105" onClick={e=>popupE('Error','New notification received')}>Popup</button>
         <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105" onClick={
           e=>signMessage(
-            {account:account.address,message:message},
+            {
+              account:account.address,
+              message,
+            },
           )
         }>
           Sign message

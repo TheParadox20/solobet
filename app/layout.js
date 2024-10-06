@@ -28,14 +28,14 @@ export default function RootLayout({ children }) {
     <html lang="en" className="large-scroll">
       <Suspense>
         <body className={`${montserrat.className} bg-primary-dark text-LightGray lg:text-xs 2xl:text-base`}>
-          <ContextProvider>
-            <Providers initialState={initialState}>
+          <Providers initialState={initialState}>
+            <ContextProvider>
               {/* <OnchainKitProvider apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY} chain={base}> */}
                 {children}
               {/* </OnchainKitProvider> */}
-            </Providers>
+              </ContextProvider>
+          </Providers>
           <Footer/>
-          </ContextProvider>
           <Popup/>
         </body>
       </Suspense>
