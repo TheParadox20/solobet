@@ -18,7 +18,9 @@
     "jsx": "preserve",
     "baseUrl": ".", // Moving baseUrl into compilerOptions as required
     "paths": {
-      "@/app/*": ["app/*"] // Fixed the paths array (simplified the wildcards)
+      "@/app/*": [
+        "app/*"
+      ] // Fixed the paths array (simplified the wildcards)
     },
     "plugins": [
       {
@@ -31,7 +33,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.js",
-    "**/*.jsx"
+    "**/*.jsx",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

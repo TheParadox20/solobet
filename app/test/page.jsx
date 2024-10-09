@@ -10,6 +10,35 @@ import { parseEther } from "ethers";
 import Input from "../UI/Input";
 import ConnectWallet from "@/app/UI/body/ConnectWallet";
 
+import { BasenameTextRecordKeys, getBasename, getBasenameAvatar, getBasenameTextRecord } from "@/app/UI/basenames";
+
+const address = '0x8c8F1a1e1bFdb15E7ed562efc84e5A588E68aD73'; // const account = useAccount(); \n address = account?.address;
+
+async function fetchData() {
+  const basename = await getBasename(address);
+
+  // if (basename === undefined) throw Error('failed to resolve address to name');
+
+  // const avatar = await getBasenameAvatar(basename);
+
+  // const description = await getBasenameTextRecord(
+  //   basename,
+  //   BasenameTextRecordKeys.Description
+  // );
+
+  // const twitter = await getBasenameTextRecord(
+  //   basename,
+  //   BasenameTextRecordKeys.Twitter
+  // );
+
+  return {
+    basename,
+    // avatar,
+    // description,
+    // twitter,
+  };
+}
+
 export default function Page() {
   let {signMessage, error:signError, data:signature, status:sigStatus } = useSignMessage({config,
     mutation:{
@@ -27,28 +56,22 @@ export default function Page() {
   let { data, error, isLoading } = useSWR(['/test/books',{}], fetcher);
   let message = ' sign hello worlp'
   const account = useAccount()
+
+  let { data:testBaseName, error:baseError, isLoading:baseLoading } = useSWR([account.address], getBasename,{});
+  console.log('My Base Name',testBaseName);
+
+  if(baseError) console.log(baseError.message)
+  if(testBaseName) alert(testBaseName)
  
-  if (error){
-    console.log(error)
-    return <div>failed to load</div>
-  }
-  if (isLoading) return <div>loading...</div>
   return (
     <div>
-        <div className="flex">
-          <h1>Workbench</h1>
-          <div className="icon-[token--bets] w-8 h-8 text-green-500"/>
-        </div>
-        {
-          data.map((book) => (
-            <div key={book.id}>
-              <h2>{book.name}</h2>
-              <p>{book.author}</p>
-            </div>
-          ))
-        }
-        <h4>Buttons</h4>
-        <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105" onClick={e=>popupE('Error','New notification received')}>Popup</button>
+      <div className="flex">
+        <h1>Workbench</h1>
+        <div className="icon-[token--bets] w-8 h-8 text-green-500"/>
+      </div>
+      
+      <h4>Buttons</h4>
+      <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105" onClick={e=>popupE('Error','New notification received')}>Popup</button>
         <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105" onClick={
           e=>signMessage(
             {

@@ -11,7 +11,7 @@ function Welcome({key}){
       <div className="z-10  p-4">
         <h2 className="text-3xl font-bold">Welcome to Solobet!</h2>
         <p className="my-3 w-3/4 md:w-1/2">
-          Kenya{'\''}s first betting exchange. Join us today for an unmatched betting experience and enjoy instant payouts via M-Pesa.
+          Kenya{'\''}s first peer-to-peer(P2P) betting platform. Join us today for an unmatched betting experience and enjoy instant payouts via M-Pesa.
         </p>
         <button className="bg-primary-light block w-fit py-2 md:py-4 px-8 rounded-lg font-semibold lg:mt-8 hover:scale-105" onClick={e=>overlayE('/signup')} >Join Now</button>
       </div>

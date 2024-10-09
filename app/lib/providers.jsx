@@ -1,8 +1,9 @@
 'use client'
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
 import { WagmiProvider } from 'wagmi'
+import { OnchainKitProvider } from '@coinbase/onchainkit';
+import { base } from 'viem/chains';
 
 import { config } from '@/app/lib/wagmi'
 
@@ -13,7 +14,9 @@ export function Providers({children,initialState}) {
   return (
     <WagmiProvider config={configuration} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <OnchainKitProvider apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY} chain={base}>
+          {children}
+        </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   )
