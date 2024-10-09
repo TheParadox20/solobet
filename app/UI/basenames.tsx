@@ -8,11 +8,11 @@ import {
     namehash,
   } from "viem";
   import { baseSepolia, base } from 'wagmi/chains';
-  import L2ResolverAbi from "@/app/abis/L2ResolverAbi";
+  import {L2ResolverAbi} from '@/app/abis/L2ResolverAbi.json';
   
   export type Basename = `${string}.base.eth`;
   
-  export const BASENAME_L2_RESOLVER_ADDRESS = "0x49aE3cC2e3AA768B1e5654f5D3C6002144A59581";
+  export const BASENAME_L2_RESOLVER_ADDRESS = "0x6533C94869D28fAA8dF77cc63f9e2b2D6Cf77eBA";
   
   export enum BasenameTextRecordKeys {
     Description = "description",
@@ -46,7 +46,7 @@ import {
   
   const baseClient = createPublicClient({
     chain: baseSepolia,
-    transport: http(process.env.NEXT_PUBLIC_RPC),
+    transport: http('https://base-sepolia.infura.io/v3/b915c6cb5ec147919d05ca756a490a6f'),
   });
   
   export async function getBasenameAvatar(basename: Basename) {
@@ -58,44 +58,44 @@ import {
     return avatar;
   }
   
-  export function buildBasenameTextRecordContract(
-    basename: Basename,
-    key: BasenameTextRecordKeys
-  ): ContractFunctionParameters {
-    return {
-      abi: L2ResolverAbi,
-      address: BASENAME_L2_RESOLVER_ADDRESS,
-      args: [namehash(basename), key],
-      functionName: "text",
-    };
-  }
+// export function buildBasenameTextRecordContract(
+//   basename: Basename,
+//   key: BasenameTextRecordKeys
+// ): ContractFunctionParameters {
+//   return {
+//     abi: L2ResolverAbi,
+//     address: BASENAME_L2_RESOLVER_ADDRESS,
+//     args: [namehash(basename), key],
+//     functionName: "text",
+//   };
+// }
+
+// // Get a single TextRecord
+// export async function getBasenameTextRecord(
+//   basename: Basename,
+//   key: BasenameTextRecordKeys
+// ) {
+//   try {
+//     const contractParameters = buildBasenameTextRecordContract(basename, key);
+//     const textRecord = await baseClient.readContract(contractParameters);
+//     return textRecord as string;
+//   } catch (error) {}
+// }
   
-  // Get a single TextRecord
-  export async function getBasenameTextRecord(
-    basename: Basename,
-    key: BasenameTextRecordKeys
-  ) {
-    try {
-      const contractParameters = buildBasenameTextRecordContract(basename, key);
-      const textRecord = await baseClient.readContract(contractParameters);
-      return textRecord as string;
-    } catch (error) {}
-  }
+  // // Get a all TextRecords
+  // export async function getBasenameTextRecords(basename: Basename) {
+  //   try {
+  //     const readContracts: ContractFunctionParameters[] =
+  //       textRecordsKeysEnabled.map((key) =>
+  //         buildBasenameTextRecordContract(basename, key)
+  //       );
+  //     const textRecords = await baseClient.multicall({
+  //       contracts: readContracts,
+  //     });
   
-  // Get a all TextRecords
-  export async function getBasenameTextRecords(basename: Basename) {
-    try {
-      const readContracts: ContractFunctionParameters[] =
-        textRecordsKeysEnabled.map((key) =>
-          buildBasenameTextRecordContract(basename, key)
-        );
-      const textRecords = await baseClient.multicall({
-        contracts: readContracts,
-      });
-  
-      return textRecords;
-    } catch (error) {}
-  }
+  //     return textRecords;
+  //   } catch (error) {}
+  // }
   
   /**
    * Convert an chainId to a coinType hex for reverse chain resolution
@@ -113,44 +113,29 @@ import {
   /**
    * Convert an address to a reverse node for ENS resolution
    */
-  export const convertReverseNodeToBytes = (
-    address: Address,
-    chainId: number
-  ) => {
-    console.log('???',address);
-    const addressFormatted = address.toLocaleLowerCase() as Address;
-    const addressNode = keccak256(addressFormatted.substring(2) as Address);
-    const chainCoinType = convertChainIdToCoinType(chainId);
-    const baseReverseNode = namehash(
-      `${chainCoinType.toLocaleUpperCase()}.reverse`
-    );
-    const addressReverseNode = keccak256(
-      encodePacked(["bytes32", "bytes32"], [baseReverseNode, addressNode])
-    );
-    return addressReverseNode;
-  };
+export const convertReverseNodeToBytes = (
+  address: Address,
+  chainId: number
+) => {
+  const addressFormatted = address.toLocaleLowerCase() as Address;
+  const addressNode = keccak256(addressFormatted.substring(2) as Address);
+  const chainCoinType = convertChainIdToCoinType(chainId);
+  const baseReverseNode = namehash(
+    `${chainCoinType.toLocaleUpperCase()}.reverse`
+  );
+  const addressReverseNode = keccak256(
+    encodePacked(["bytes32", "bytes32"], [baseReverseNode, addressNode])
+  );
+  return addressReverseNode;
+};
   
-  // export async function getBasename(address: Address) {
-  //   try {
-  //     const addressReverseNode = convertReverseNodeToBytes(address, base.id);
-  //     const basename = await baseClient.readContract({
-  //       abi: L2ResolverAbi,
-  //       address: BASENAME_L2_RESOLVER_ADDRESS,
-  //       functionName: "name",
-  //       args: [addressReverseNode],
-  //     });
-  //     if (basename) {
-  //       return basename as Basename;
-  //     }
-  //   } catch (error) {}
-  // }
-
 export async function getBasename([address]) {
   const addressReverseNode = convertReverseNodeToBytes(address, baseSepolia.id);
+  console.log(`!!!! ${addressReverseNode} !!!!`);
   return baseClient.readContract({
     abi: L2ResolverAbi,
     address: BASENAME_L2_RESOLVER_ADDRESS,
     functionName: "name",
     args: [addressReverseNode],
-  });
+  })
 }

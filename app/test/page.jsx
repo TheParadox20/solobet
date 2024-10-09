@@ -58,10 +58,8 @@ export default function Page() {
   const account = useAccount()
 
   let { data:testBaseName, error:baseError, isLoading:baseLoading } = useSWR([account.address], getBasename,{});
-  console.log('My Base Name',testBaseName);
 
-  if(baseError) console.log(baseError.message)
-  if(testBaseName) alert(testBaseName)
+  if(baseError) console.log('Base name error :: ',baseError.message)
  
   return (
     <div>
@@ -69,6 +67,8 @@ export default function Page() {
         <h1>Workbench</h1>
         <div className="icon-[token--bets] w-8 h-8 text-green-500"/>
       </div>
+
+      <p className="my-3 font-semibold text-lg">Base name: <span>{testBaseName}</span></p>
       
       <h4>Buttons</h4>
       <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105" onClick={e=>popupE('Error','New notification received')}>Popup</button>

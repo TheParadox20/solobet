@@ -12,7 +12,7 @@ export default function Footer(){
                     <p className="my-3 text-sm">
                     Kenya{'\''}s first peer-to-peer(P2P) betting platform. Join us today for <Link className="" href={'/test'}>an</Link> unmatched betting experience and enjoy instant payouts via M-Pesa.
                     </p>
-                    <button className="bg-primary-light block w-fit py-2 md:py-4 px-8 rounded-lg font-semibold lg:mt-8" onClick={e=>{overlayE('/signup')}}>Join Now</button>
+                    <button className="bg-primary-light block w-fit py-2 md:py-4 px-8 rounded-lg font-semibold lg:mt-8 hover:scale-110" onClick={e=>overlayE('/signup')}>Join Now</button>
                 </div>
                 <div className="flex flex-col md:flex-row gap-y-6 gap-x-28 md:w-1/3">
                     <div>
