@@ -14,31 +14,6 @@ import { BasenameTextRecordKeys, getBasename, getBasenameAvatar, getBasenameText
 
 const address = '0x8c8F1a1e1bFdb15E7ed562efc84e5A588E68aD73'; // const account = useAccount(); \n address = account?.address;
 
-async function fetchData() {
-  const basename = await getBasename(address);
-
-  // if (basename === undefined) throw Error('failed to resolve address to name');
-
-  // const avatar = await getBasenameAvatar(basename);
-
-  // const description = await getBasenameTextRecord(
-  //   basename,
-  //   BasenameTextRecordKeys.Description
-  // );
-
-  // const twitter = await getBasenameTextRecord(
-  //   basename,
-  //   BasenameTextRecordKeys.Twitter
-  // );
-
-  return {
-    basename,
-    // avatar,
-    // description,
-    // twitter,
-  };
-}
-
 export default function Page() {
   let {signMessage, error:signError, data:signature, status:sigStatus } = useSignMessage({config,
     mutation:{

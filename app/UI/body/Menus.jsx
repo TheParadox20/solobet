@@ -11,6 +11,7 @@ import useUser from "@/app/lib/hooks/useUser";
 import Overlay from "./Overlay";
 import Deposit from "./Deposit";
 import Withdraw from "./Withdraw";
+import P2EIcon from "../P2EIcon";
 
 export function MobileBottomMenu(){
     let {isLogged} = useContext(Context);
@@ -195,8 +196,8 @@ export function TopMenu(){
                 <div className="flex gap-12">
                     <Link className={`${pathname==='/'?'text-primary-light':'text-LightGray'} font-semibold`} href="/">Home</Link>
                     <Link className={`${pathname.includes('/sports')?'text-primary-light':'text-LightGray'} font-semibold`} href="/sports">Sports</Link>
+                    <Link className={`${pathname.includes('/P2E')?'text-primary-light':'text-LightGray'} font-semibold`} href="/P2E">Play To Earn</Link>
                     <Link className={`${pathname==='/bets'?'text-primary-light':'text-LightGray'} font-semibold`} href="/bets">My Bets</Link>
-                    <Link className={`${pathname.includes('/p2e')?'text-primary-light':'text-LightGray'} font-semibold`} href="/P2E">P2E</Link>
                     {isLogged && <Link className={`${pathname.includes('/account')?'text-primary-light':'text-LightGray'} font-semibold`} href="/account">Account</Link>}
                 </div>
                 {
@@ -270,11 +271,27 @@ export function MobileSportsMenu(){
 
 export function SportsMenu(){
     let [activeSport, setActiveSport] = useState(null)
+    let [activeMarket, setActiveMarket] = useState(null)
     let params = useParams()['sports'];
     let path = params?params.map((param,i)=>{
         return param.replaceAll('%20',' ')
     }):[];
     let {Popular, Sports} = useContext(Context);
+
+    let p2e = [
+        {
+            sport:'Prediction Market',
+            categories:['Forex', 'Politics', 'Entertainment', 'Tech & Innovation', 'World Events', 'Social Trends','Community events']
+        },
+        {
+            sport:'Gamers\' Lounge',
+            categories:['First shooter', 'Racing', 'Sports']
+        },
+        {
+            sport:'Casino',
+            categories:['Crash games', 'Slots','Mini games', 'Scratch']
+        }
+    ]
 
     return(
         <div className="hidden md:block bg-primary-dark ml-2 px-4 2xl:pr-16 max-h-[90vh] overflow-y-scroll large-scroll">
@@ -287,6 +304,34 @@ export function SportsMenu(){
                             <span className="truncate lg:text-xs 2xl:text-sm font-semibold">{category.text}</span>
                         </Link>
                     ))
+                }
+            </div>
+            <div className="my-5 border-b-[1px] border-Grey pb-4 ">
+                <h3 className="text-primary-light text-base font-semibold mb-3">PLAY TO EARN</h3>
+                {
+                    p2e.map((market,i) => {
+                        return (
+                            <div key={i}>
+                                <div className={`flex items-center justify-between px-2 rounded-lg 2xl:my-1 ${((path[1]==market.sport && activeMarket!=i) || (activeMarket==i))?'bg-primary-base':null}`} onClick={e=>{i==activeMarket?setActiveMarket(null):setActiveMarket(i)}}>
+                                    <Link href={`/P2E/${market.sport}`} className={`flex gap-2 items-center my-2`}>
+                                        <P2EIcon sport={market.sport} classname={'w-6 h-6 2xl:w-8 2xl:h-8'}/>
+                                        <span className="truncate lg:text-xs 2xl:text-sm font-semibold">{market.sport}</span>
+                                    </Link>
+                                    {
+                                        market.categories.length>0 && <button className={`${i==activeMarket?'icon-[ep--arrow-up]':'icon-[ep--arrow-down]'} w-4 h-4 2xl:w-6 2xl:h-6`} />
+                                    }
+                                </div>
+                                {
+                                    (activeMarket!=null && i==activeMarket) &&
+                                    p2e[activeMarket].categories.map((category,i) => (
+                                        <Link href={`/P2E/${market.sport}/${category}`} key={i} className={`flex gap-2 items-center my-1 ml-10 p-2 rounded-lg ${path[path.length-1]==category?'bg-primary-base':null}`}>
+                                            <span className="truncate lg:text-xs 2xl:text-sm">{category}</span>
+                                        </Link>
+                                    ))
+                                }
+                            </div>
+                        )
+                    })
                 }
             </div>
             <div>

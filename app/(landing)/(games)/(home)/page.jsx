@@ -5,15 +5,45 @@ import { fetcher } from "@/app/lib/data";
 import Spinner from "@/app/UI/body/Spinner";
 import Carousel from "@/app/UI/body/Hero";
 import Game from "@/app/UI/games/Game";
+import Prediction from "@/app/UI/games/Prediction";
 import SportIcon from "@/app/UI/SportsIcon";
 
 export default function Page() {
   let { data:popular, error, isLoading } = useSWR(['/home',{}], fetcher);
-
+  let prediction = {
+    thumbnail: 'https://via.placeholder.com/150',
+    title:'Presidential Election Winner',
+    stakes:12740,
+    options:[
+      {name:'Joe Biden', percentage:12},
+      {name:'Donald Trump', percentage:15},
+      {name:'Kanye West', percentage:20}
+    ],
+    chats:324
+  }
   
   return (
     <div className="lg:mt-7">
         <Carousel/>
+        <div className="flex gap-3 mb-4 items-center">
+          <span className="w-5 h-5 icon-[bi--graph-up]"/>
+          <h6 className="font-semibold text-lg">Prediction Market</h6>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mb-8">
+          {
+            isLoading || error?
+            <div className="flex justify-center w-full h-[20vh]"><Spinner full={false}/></div>
+            :
+            // data && data.predictions.map((prediction,i)=>{
+              [...new Array(4)].map((_,i)=>{
+              return <div key={i} className=""><Prediction data={prediction}/></div>
+            })
+          }
+        </div>
+        <button className="flex text-lg items-center gap-x-2 bg-primary-light justify-center font-semibold py-3 rounded-lg w-full my-10">
+          <span>View All</span>
+          <span className="w-7 h-7 icon-[ep--right]"/>
+        </button>
         {
           error && <p>Error fetching games</p>
         }
