@@ -17,7 +17,7 @@ export default function Page() {
 
   return (
     <div className="border-t-[1px] border-Grey py-8 px-2">
-      <div className="md:mx-auto md:w-1/2 2xl:w-1/3">
+      <div className="md:mx-auto md:w-1/2">
           <h1 className="font-bold text-3xl mb-5">My Bets</h1>
           <p className="text-sm mb-8">View your currently active and previously settled bets</p>
           <div className="flex justify-between items-center gap-3">

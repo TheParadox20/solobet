@@ -1,0 +1,234 @@
+{
+    "soloAddress":"0xE83C84C35F03C6d28863D590424Da7bEc938535D",
+    "SolobetABI":[
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "from",
+                    "type": "address"
+                }
+            ],
+            "name": "BetPlaced",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "changeOwner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "betID",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint8",
+                    "name": "winner",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "winnings",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "winnersPot",
+                    "type": "uint256"
+                }
+            ],
+            "name": "closeBet",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "betID",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint8",
+                    "name": "choice",
+                    "type": "uint8"
+                }
+            ],
+            "name": "placeBet",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "seed",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "newCommision",
+                    "type": "uint8"
+                }
+            ],
+            "name": "setCommision",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "inputs": [],
+            "name": "admin",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getBalance",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "betID",
+                    "type": "string"
+                }
+            ],
+            "name": "getBetInfo",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "components": [
+                                {
+                                    "internalType": "uint256",
+                                    "name": "amount",
+                                    "type": "uint256"
+                                },
+                                {
+                                    "internalType": "uint256[]",
+                                    "name": "stakes",
+                                    "type": "uint256[]"
+                                },
+                                {
+                                    "internalType": "address payable[]",
+                                    "name": "stakers",
+                                    "type": "address[]"
+                                }
+                            ],
+                            "internalType": "struct Solobet.Choice",
+                            "name": "home",
+                            "type": "tuple"
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "uint256",
+                                    "name": "amount",
+                                    "type": "uint256"
+                                },
+                                {
+                                    "internalType": "uint256[]",
+                                    "name": "stakes",
+                                    "type": "uint256[]"
+                                },
+                                {
+                                    "internalType": "address payable[]",
+                                    "name": "stakers",
+                                    "type": "address[]"
+                                }
+                            ],
+                            "internalType": "struct Solobet.Choice",
+                            "name": "draw",
+                            "type": "tuple"
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "uint256",
+                                    "name": "amount",
+                                    "type": "uint256"
+                                },
+                                {
+                                    "internalType": "uint256[]",
+                                    "name": "stakes",
+                                    "type": "uint256[]"
+                                },
+                                {
+                                    "internalType": "address payable[]",
+                                    "name": "stakers",
+                                    "type": "address[]"
+                                }
+                            ],
+                            "internalType": "struct Solobet.Choice",
+                            "name": "away",
+                            "type": "tuple"
+                        }
+                    ],
+                    "internalType": "struct Solobet.Bet",
+                    "name": "bet",
+                    "type": "tuple"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getCommision",
+            "outputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "",
+                    "type": "uint8"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}

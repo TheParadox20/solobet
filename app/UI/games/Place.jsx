@@ -3,10 +3,15 @@ import { useState, useEffect, useRef, useContext } from "react"
 import { Context } from "@/app/lib/ContextProvider"
 import Input from "@/app/UI/Input"
 import { nowYouDont } from "@/app/lib/controlls";
-import { overlayE } from "@/app/lib/trigger";
+import { overlayE, popupE } from "@/app/lib/trigger";
 import { postData } from "@/app/lib/data";
 import useUser from "@/app/lib/hooks/useUser";
 import useBetslip from "@/app/lib/hooks/useBetslip";
+import {SolobetABI, soloAddress} from '@/app/abis/solobet.json';
+import { useWriteContract, useAccount } from "wagmi";
+import { config } from "@/app/lib/wagmi";
+import { parseEther } from "ethers";
+import { EthKsh, KshEth } from "@/app/lib/utils/currency";
 
 export default function Place(){
     let defaultStake = 20;
@@ -25,7 +30,21 @@ export default function Place(){
     let {updateBalance} = useUser();
     let {mutate} = useBetslip();
 
+    const account = useAccount()
+    const { writeContract, data:txHash, status:writeStatus, error:writeError, isPending:writePending } = useWriteContract({config,})
+    if(writePending) popupE('Processing', 'Accept transaction in wallet')
+    if(writeError) popupE('Error',writeError.message)
+    if(txHash){
+        postData((_)=>{popupE('Success',`TxHash: ${txHash}`)},{
+            game: idRef.current,
+            amount,
+            choice: outcomeRef.current,
+            web3:true
+        },'/bet/place')
+    }
+
     useEffect(()=>{
+        console.log(KshEth(amount))
         window.addEventListener('place', e=>handler(e))
         return ()=>window.removeEventListener('place', e=>handler(e))
     },[])
@@ -53,16 +72,29 @@ export default function Place(){
     }
 
     let place = e=>{
-        postData((response)=>{
-            if(response.message){
-                updateBalance(-amount)
-                mutate()
-            }
-        },{
-            game: idRef.current,
-            amount,
-            choice: outcomeRef.current
-        },'/bet/place')
+        if(account.status=='connected'){
+            writeContract({ 
+                abi:SolobetABI,
+                address: soloAddress,
+                functionName: 'placeBet',
+                value:parseEther(KshEth(amount)),
+                args: [
+                    idRef.current.toString(),//game PK
+                    outcomeRef.current
+                ],
+            })
+        }else{
+            postData((response)=>{
+                if(response.message){
+                    updateBalance(-amount)
+                    mutate()
+                }
+            },{
+                game: idRef.current,
+                amount,
+                choice: outcomeRef.current
+            },'/bet/place')
+        }
     }
 
     return(

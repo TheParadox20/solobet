@@ -12,7 +12,7 @@ import Popup from "@/app/UI/body/Popup";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Solobet",
+  title: "SoloBet",
   description: "Kenya\'s first peer-to-peer(P2P) betting platform",
 };
 

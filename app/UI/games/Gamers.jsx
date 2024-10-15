@@ -6,7 +6,7 @@ export default function Gamers({data}) {
                     <img className="rounded-lg w-16 h-20" src={data.thumbnail} alt="" />
                     <div className="flex flex-col">
                         <p className="font-semibold">{data.title}</p>
-                        <p className="font-extralight">{data.devices}</p>
+                        <p className="font-light mt-1 text-sm">{data.devices}</p>
                     </div>
                 </div>
                 <p className="font-light">Begins at {data.start}</p>

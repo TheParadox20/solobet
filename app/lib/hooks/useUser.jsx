@@ -8,8 +8,6 @@ import { fetcher, postData } from "@/app/lib/data";
 import { save, load, remove } from "@/app/lib/storage";
 import { config } from '@/app/lib/wagmi'
 
-// 0xf12Ad0A0CaAB4D67e5531266504dFFa7a9e3Dcc7
-// 0x5Ed7293FC6aFc86A7E5c54F4A320C93DA812BF02
 export default function useUser () {
     let {setIsLogged, isLogged} = useContext(Context);
     const account = useAccount()
@@ -22,10 +20,10 @@ export default function useUser () {
     })
     const { disconnect } = useDisconnect()
     const { data, isError, isLoading, mutate } = useSWR(['/user',{}], fetcher, {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        revalidateOnMount: false,
-        errorRetryInterval: 15000
+        // revalidateOnFocus: false,
+        // revalidateOnReconnect: false,
+        // revalidateOnMount: false,
+        // errorRetryInterval: 15000
     })
 
     let logout = ()=>{

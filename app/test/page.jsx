@@ -4,17 +4,20 @@ import { useState } from "react";
 import { fetcher, getData } from "@/app/lib/data";
 import { useAccount } from 'wagmi'
 import { popupE } from "@/app/lib/trigger";
-import { useSignMessage, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+import { useSignMessage, useSendTransaction, useWaitForTransactionReceipt, useSwitchChain, useReadContract, useWriteContract } from "wagmi";
+import { mainnet, base, baseSepolia } from "viem/chains";
 import { config } from "@/app/lib/wagmi";
 import { parseEther } from "ethers";
 import Input from "../UI/Input";
 import ConnectWallet from "@/app/UI/body/ConnectWallet";
+import {SolobetABI, soloAddress} from '@/app/abis/solobet.json';
 
 import { BasenameTextRecordKeys, getBasename, getBasenameAvatar, getBasenameTextRecord } from "@/app/UI/basenames";
 
-const address = '0x8c8F1a1e1bFdb15E7ed562efc84e5A588E68aD73'; // const account = useAccount(); \n address = account?.address;
+// const address = '0x8c8F1a1e1bFdb15E7ed562efc84e5A588E68aD73'; // const account = useAccount(); \n address = account?.address;
 
 export default function Page() {
+  const { chains, switchChain, isSuccess, error:switchError } = useSwitchChain({config})
   let {signMessage, error:signError, data:signature, status:sigStatus } = useSignMessage({config,
     mutation:{
       onSuccess:(data)=>{alert(data)}
@@ -32,9 +35,34 @@ export default function Page() {
   let message = ' sign hello worlp'
   const account = useAccount()
 
+  const { writeContract, data:txHash, status:writeStatus, error:writeError, isPending:writePending } = useWriteContract({config,})
+  if(txHash) popupE('Success',`TxHash: ${txHash}`)
+  let placeBet = (e)=>{
+    e.preventDefault();
+    writeContract({ 
+      abi:SolobetABI,
+      address: soloAddress,
+      functionName: 'placeBet',
+      value:parseEther('0.000000003'),
+      args: [
+        'xyz',
+        2
+      ],
+   })
+  }
+  const {data:contractBalance, isPending:contractReadLoading, error:contractReadError} = useReadContract({
+    config,
+    abi:SolobetABI,
+    address: soloAddress,
+    functionName: 'getBalance',
+    account: account.address,
+    args:[],
+  })
+
   let { data:testBaseName, error:baseError, isLoading:baseLoading } = useSWR([account.address], getBasename,{});
 
   if(baseError) console.log('Base name error :: ',baseError.message)
+  if(contractBalance) console.log(contractBalance, typeof(contractBalance))
  
   return (
     <div>
@@ -43,7 +71,31 @@ export default function Page() {
         <div className="icon-[token--bets] w-8 h-8 text-green-500"/>
       </div>
 
+      <p className="my-3 font-semibold text-lg">Contract Interaction</p>
+      {contractBalance && <p>Solobet balance: {parseInt(contractBalance)}</p> }
+      {contractReadLoading && <p>Fetching data.... please wait</p> }
+      {contractReadError && <p>Error: {contractReadError.message}</p> }
+
+      <button className="bg-primary-light mx-2 w-44 py-2 rounded-full" onClick={e=>placeBet(e)}>Place Bet</button>
+      <span>{writeStatus}</span>
+      {writeError && <p>{writeError.message}</p> }
+      {txHash && <p>Success: {txHash}</p> }
+      
       <p className="my-3 font-semibold text-lg">Base name: <span>{testBaseName}</span></p>
+
+      <div className="flex gap-5 my-3">
+        {chains.map((chain) => (
+          <button className="block" key={chain.id} onClick={() => switchChain({
+            chainId: chain.id,
+            onSuccess:()=>{alert('Switched to ',chain.name)},
+            onSettled:()=>{alert('Settled to ',chain.name)},  
+           })}>
+            {chain.name}
+          </button>
+        ))}
+      </div>
+      {switchError && <div>{switchError.message}</div>}
+      {isSuccess && <div>Switched to {isSuccess.name}</div>}
       
       <h4>Buttons</h4>
       <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105" onClick={e=>popupE('Error','New notification received')}>Popup</button>
