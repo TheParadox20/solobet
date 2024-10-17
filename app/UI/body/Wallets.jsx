@@ -1,28 +1,43 @@
 import { useRef } from 'react'
-import { useConnect, useSignMessage, useAccount, useDisconnect } from 'wagmi'
+import { useConnect, useSignMessage, useAccount, useDisconnect, useSwitchChain } from 'wagmi'
 import useUser from '@/app/lib/hooks/useUser'
 import { getData } from '@/app/lib/data'
 import { config } from '@/app/lib/wagmi'
 import { popupE, overlayE } from '@/app/lib/trigger'
+import { baseSepolia, base, mainnet } from 'wagmi/chains';
 
 export default function Wallets({control}){
     let {login, signUp} = useUser();
     const account = useAccount()
     const { disconnect } = useDisconnect()
+    const { chains, switchChain, isSuccess, error:switchError } = useSwitchChain({config})
 
     let {signMessage, error:signError, data:signature, status:signStatus } = useSignMessage({
         config,
         mutation:{
             onSuccess:(data)=>{
                 if(existingRef.current){//login
-                    login(account.address,data,(_)=>{control('')})
+                    login(account.address,data,(_)=>{
+                        switchChain({
+                            chainId: baseSepolia.id,
+                            onSuccess:()=>{console.log('Switched to ',baseSepolia.name)},
+                            onSettled:()=>{console.log('Settled to ',baseSepolia.name)},  
+                        })
+                        control('')
+                    })
                 }else{//signup
                     signUp(
                         account.address,
                         account.address,
                         data,
-                        (_)=>{control('')}
-                    )
+                        (_)=>{
+                            switchChain({
+                                chainId: baseSepolia.id,
+                                onSuccess:()=>{console.log('Switched to ',baseSepolia.name)},
+                                onSettled:()=>{console.log('Settled to ',baseSepolia.name)},  
+                            })
+                            control('')
+                    })
                 }
             },
             onError:(error)=>{

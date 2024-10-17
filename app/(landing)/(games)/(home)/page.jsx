@@ -9,18 +9,7 @@ import Prediction from "@/app/UI/games/Prediction";
 import SportIcon from "@/app/UI/SportsIcon";
 
 export default function Page() {
-  let { data:popular, error, isLoading } = useSWR(['/home',{}], fetcher);
-  let prediction = {
-    thumbnail: 'https://via.placeholder.com/150',
-    title:'Presidential Election Winner',
-    stakes:12740,
-    options:[
-      {name:'Joe Biden', percentage:12},
-      {name:'Donald Trump', percentage:15},
-      {name:'Kanye West', percentage:20}
-    ],
-    chats:324
-  }
+  let { data, error, isLoading } = useSWR(['/home',{}], fetcher);
   
   return (
     <div className="lg:mt-7">
@@ -34,8 +23,7 @@ export default function Page() {
             isLoading || error?
             <div className="flex justify-center w-full h-[20vh]"><Spinner full={false}/></div>
             :
-            // data && data.predictions.map((prediction,i)=>{
-              [...new Array(4)].map((_,i)=>{
+            data && data.p2e.map((prediction,i)=>{
               return <div key={i} className=""><Prediction data={prediction}/></div>
             })
           }
@@ -51,13 +39,13 @@ export default function Page() {
           isLoading?
           <Spinner full={false}/>
           :
-          !error && Object.keys(popular).map((sport,i)=>{
+          !error && Object.keys(data.popular).map((sport,i)=>{
             return (
               <div key={i}>
                 <div className="flex items-center font-bold text-lg gap-2 2xl:text-2xl mb-4"><SportIcon sport={sport} classname={'w-7 h-7'}/>Upcoming {sport}</div>
                 <div className="bg-primary-base mb-8 px-5 md:px-8 pb-10 pt-2 rounded-lg">
                   {
-                    popular[sport].map((match,i)=>(<div key={i} className="my-4"><Game data={match}/></div>))
+                    data.popular[sport].map((match,i)=>(<div key={i} className="my-4"><Game data={match}/></div>))
                   }
                   <Link href={`/sports?sport=${sport}`} className="w-full flex items-center justify-center text-center font-semibold underline underline-offset-4">View All Upcoming {sport} <span className="icon-[basil--arrow-right-outline] w-7 h-7"/></Link>
                 </div>

@@ -73,7 +73,8 @@ export function MobileTopMenu(){
 export function MobileSideMenu(){
     let [overlay, setOverlay] = useState('');
     const {isLoading,error, user, logout } = useUser();
-    let {isLogged} = useContext(Context);
+    let {isLogged, Settings} = useContext(Context);
+    let [settings, setSettings] = Settings
     let pages = [
         {
             href:'/about',
@@ -119,8 +120,12 @@ export function MobileSideMenu(){
                     </div>
                     <div className="border-b-[1px] border-Grey py-2 pb-4">
                         <div className="flex justify-between">
-                            <div className="flex flex-col">
-                                <span className="font-bold text-left">{user.web3?'ETH':'KES'} {user['balance'].toFixed(2)}</span>
+                            <div className="flex flex-col items-center">
+                                <span className="font-bold text-left">
+                                    {settings.currency.symbol}
+                                    {user['balance'] && user['balance'].toFixed(2)}
+                                    { user['balance']==undefined && <span className="w-5 h-5 icon-[svg-spinners--3-dots-move]"/>}
+                                </span>
                                 <span className=" text-left">Balance</span>
                             </div>
                             <button className="flex items-center p-1 rounded-lg border-2 border-primary-light"><span className="icon-[mdi--eye-off-outline] w-8 h-8"/></button>
@@ -187,7 +192,8 @@ export function TopMenu(){
     let pathname = usePathname();
     let [overlay, setOverlay] = useState('');
     const {isLoading,error, user } = useUser();
-    let {isLogged} = useContext(Context);
+    let {isLogged, Settings} = useContext(Context);
+    let [settings, setSettings] = Settings
     
     return(
         <header className="hidden md:block bg-primary-dark z-30 py-3 2xl:py-5 px-4 sticky top-0">
@@ -206,7 +212,11 @@ export function TopMenu(){
                         <button onClick={e=>{toggle('mobile_side_menu'); isVisible('mobile_side_menu')?show('mobile_side_menu'):hide('mobile_side_menu')}} className="flex justify-center items-center gap-2">
                             <div className="icon-[ph--user-circle-light] w-10 h-10 2xl:w-12 2xl:h-12"/>
                             <div className="flex flex-col">
-                                <span className="font-bold text-left">{user.web3?'ETH':'KES'} {user['balance'].toFixed(2)}</span>
+                                <span className="font-bold text-left items-center">
+                                    {settings.currency.symbol}
+                                    {user['balance'] && user['balance'].toFixed(2)}
+                                    {user['balance']==undefined && <span className="w-5 h-5 icon-[svg-spinners--3-dots-move]"/>}
+                                </span>
                                 <span className=" text-left">Balance</span>
                             </div>
                             <div className="icon-[entypo--chevron-small-down] w-10 h-10"/>

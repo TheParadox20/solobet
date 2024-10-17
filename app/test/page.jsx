@@ -7,11 +7,11 @@ import { popupE } from "@/app/lib/trigger";
 import { useSignMessage, useSendTransaction, useWaitForTransactionReceipt, useSwitchChain, useReadContract, useWriteContract } from "wagmi";
 import { mainnet, base, baseSepolia } from "viem/chains";
 import { config } from "@/app/lib/wagmi";
-import { parseEther } from "ethers";
+import { parseEther, formatEther } from "ethers";
 import Input from "../UI/Input";
-import ConnectWallet from "@/app/UI/body/ConnectWallet";
 import {SolobetABI, soloAddress} from '@/app/abis/solobet.json';
-
+import Close from './Close';
+import { WeiKsh } from "../lib/utils/currency";
 import { BasenameTextRecordKeys, getBasename, getBasenameAvatar, getBasenameTextRecord } from "@/app/UI/basenames";
 
 // const address = '0x8c8F1a1e1bFdb15E7ed562efc84e5A588E68aD73'; // const account = useAccount(); \n address = account?.address;
@@ -35,7 +35,12 @@ export default function Page() {
   let message = ' sign hello worlp'
   const account = useAccount()
 
-  const { writeContract, data:txHash, status:writeStatus, error:writeError, isPending:writePending } = useWriteContract({config,})
+  const { writeContract, data:txHash, status:writeStatus, error:writeError, isPending:writePending } = useWriteContract({
+    config,
+    mutation:{
+      onSuccess:(data)=>{alert(data)}
+    }
+  })
   if(txHash) popupE('Success',`TxHash: ${txHash}`)
   let placeBet = (e)=>{
     e.preventDefault();
@@ -72,7 +77,7 @@ export default function Page() {
       </div>
 
       <p className="my-3 font-semibold text-lg">Contract Interaction</p>
-      {contractBalance && <p>Solobet balance: {parseInt(contractBalance)}</p> }
+      {contractBalance && <p>Solobet balance: KsH {WeiKsh(contractBalance)}</p> }
       {contractReadLoading && <p>Fetching data.... please wait</p> }
       {contractReadError && <p>Error: {contractReadError.message}</p> }
 
@@ -116,9 +121,6 @@ export default function Page() {
           {sigStatus && <span>{sigStatus}</span>}
         </div>
         <div className="w-1/3 my-5">
-          <ConnectWallet className="flex items-center justify-center gap-4 py-2 text-sm font-semibold border-2 border-primary-light rounded-lg w-full hover:shadow-md hover:shadow-primary-light">
-              <span className="w-6 h-6 icon-[hugeicons--bitcoin-wallet]"/> Connect Crypto Wallet
-          </ConnectWallet>
         </div>
         <button className="block my-2 bg-primary-light py-1 px-4 hover:scale-105 disabled:bg-gray-700" disabled={isPending} onClick={e=>{
           sendTransaction({
@@ -139,6 +141,7 @@ export default function Page() {
         {txError && (
           <div>Error: {(txError).shortMessage || txError.message}</div>
         )}
+        <Close/>
     </div>
   );
 }

@@ -1,9 +1,13 @@
 'use client'
+import { useContext } from "react";
+import { Context } from "@/app/lib/ContextProvider";
 import { placeE } from "@/app/lib/trigger";
 import { nowYouSee } from "@/app/lib/controlls";
 
 export default function Game({data}){
-    let defaultStake = 20;
+    let {Settings} = useContext(Context);
+    let [settings, setSettings] = Settings;
+    let defaultStake = settings.defaultStake;
     let odd = (stakes, pot)=>{
         let award = ((defaultStake/stakes)==Infinity?1:(defaultStake/stakes))*pot+defaultStake;
         return (award/defaultStake).toFixed(2);

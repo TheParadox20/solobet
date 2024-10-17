@@ -7,18 +7,20 @@ export function save(key, value){
 }
 
 export function load(key){
-    if (!localStorage.getItem(key)) return null
-    if (localStorage.getItem(key) == 'undefined') return null
-    return JSON.parse(
-        localStorage.getItem(key)
-    )
+    if(typeof window !== 'undefined'){
+      if (!localStorage.getItem(key)) return null
+      if (localStorage.getItem(key) == 'undefined') return null
+      return JSON.parse(
+          localStorage.getItem(key)
+      )
+    }
 }
 
 export function remove(key){
     localStorage.removeItem(key)
 }
 
-const dbName = 'EIK';
+const dbName = 'solobet';
 
 export function saveDB(key, value) {
   return new Promise((resolve, reject) => {

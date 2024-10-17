@@ -13,6 +13,7 @@ export default function AccountLayout({children}) {
           <Link className={`${path=='/account'?'text-primary-light underline':null}`} href={'/account'}>Personal Details</Link>
           <Link className={`${path=='/account/statement'?'text-primary-light underline':null}`} href={'/account/statement'}>Statement</Link>
           <Link className={`${path=='/account/responsible-gaming'?'text-primary-light underline':null}`} href={'/account/responsible-gaming'}>Responsible Gaming</Link>
+          <Link className={`${path=='/account/settings'?'text-primary-light underline':null}`} href={'/account/settings'}>Settings</Link>
         </div>
         {children}
       </div>

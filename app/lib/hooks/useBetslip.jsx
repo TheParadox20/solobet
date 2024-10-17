@@ -6,10 +6,10 @@ import { fetcher } from "@/app/lib/data";
 export default function useBetslip () {
     let {isLogged} = useContext(Context);
     const { data, isError, isLoading, mutate } = useSWR(['/betslip',{}], fetcher,{
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        revalidateOnMount: true,
-        errorRetryInterval: 15000
+        // revalidateOnFocus: false,
+        // revalidateOnReconnect: false,
+        // revalidateOnMount: true,
+        // errorRetryInterval: 15000
     })
     useEffect(()=>{
         if(isLogged) mutate()

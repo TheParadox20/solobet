@@ -14,8 +14,9 @@ import { parseEther } from "ethers";
 import { EthKsh, KshEth } from "@/app/lib/utils/currency";
 
 export default function Place(){
-    let defaultStake = 20;
-    let [amount, setAmount] = useState(defaultStake);
+    let {isLogged, Settings} = useContext(Context);
+    let [settings, setSettings] = Settings;
+    let [amount, setAmount] = useState(settings.defaultStake);
     let [match, setMatch] = useState('');
     let [pot, setPot] = useState(0);
     let [users, setUsers] = useState(0);
@@ -26,7 +27,6 @@ export default function Place(){
     let awardRef = useRef('');
     let outcomeRef = useRef(0);
     let idRef = useRef(0);
-    let {isLogged} = useContext(Context);
     let {updateBalance} = useUser();
     let {mutate} = useBetslip();
 
