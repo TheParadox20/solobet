@@ -17,7 +17,7 @@ export default function Overlay({children, className,id, control}){
         //stop bubbling of click event from children
         let children = document.getElementById('children');
         children.addEventListener('click', e=>{
-            e.stopPropagation();
+            // e.stopPropagation();
         })
     },[])
     

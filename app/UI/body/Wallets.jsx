@@ -1,4 +1,5 @@
-import { useRef } from 'react'
+import { useRef, useContext } from 'react'
+import { Context } from '@/app/lib/ContextProvider'
 import { useConnect, useSignMessage, useAccount, useDisconnect, useSwitchChain } from 'wagmi'
 import useUser from '@/app/lib/hooks/useUser'
 import { getData } from '@/app/lib/data'
@@ -8,6 +9,7 @@ import { baseSepolia, base, mainnet } from 'wagmi/chains';
 
 export default function Wallets({control}){
     let {login, signUp} = useUser();
+    let {isLogged} = useContext(Context)
     const account = useAccount()
     const { disconnect } = useDisconnect()
     const { chains, switchChain, isSuccess, error:switchError } = useSwitchChain({config})
@@ -49,6 +51,10 @@ export default function Wallets({control}){
     let existingRef = useRef(null);
 
     let connectWalletSuccess = (_)=>{
+        if(isLogged){
+            getData((_)=>{},'/web3/connect',{wallet:account.address})
+        }
+        else
         getData((response)=>{
             existingRef.current = response.active;
             signMessage({account:account.address,message:'solobet.vercel.app'})

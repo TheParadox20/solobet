@@ -10,7 +10,7 @@ import { config } from '@/app/lib/wagmi'
 import {formatAddress} from "@/app/lib/utils/utils";
 
 export default function useUser () {
-    let {setIsLogged, isLogged, Settings} = useContext(Context);
+    let {setIsLogged, BaseRate, Settings} = useContext(Context);
     let [settings, setSettings] = Settings
     const account = useAccount()
     const balance = useBalance({
@@ -32,10 +32,10 @@ export default function useUser () {
         remove('token');
         disconnect();
         setIsLogged(false)
+        if(typeof window !== 'undefined') window.location.reload()
     }, [disconnect, setIsLogged]);
 
     let getBalance = useCallback((offChainBalance) => {
-        const BaseRate = 335855;
         if(offChainBalance && account.status !== 'connected') return parseFloat(offChainBalance) * settings.currency.rate
         if(account.status === 'connected' && balance?.isFetched && !balance?.isError) return parseFloat(ethers.formatUnits(balance?.data?.value, 'ether')) * BaseRate * settings.currency.rate
         if(balance?.isFetching || balance?.isError) return undefined

@@ -12,7 +12,7 @@ export let Context = createContext();
 let settings = load('settings') || {
     currency:{
         name:'Kenyan Shilling',
-        symbol: 'Ksh',
+        symbol: 'KSH',
         rate: 1
     },
     defaultStake: 20
@@ -22,6 +22,7 @@ export default function ContextProvider({ children }) {
     const account = useAccount()
     let [isLogged, setIsLogged] = useState(account.status==='connected');
     let Settings = useState(settings)
+    const BaseRate = 335855;
     let { data, error, isLoading } = useSWR(['/menu',{}], fetcher,{
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
@@ -46,7 +47,7 @@ export default function ContextProvider({ children }) {
         Sports = data.Sports
     }
     return(
-        <Context.Provider value={{Popular, Sports, isLogged, setIsLogged, Settings}}>
+        <Context.Provider value={{Popular, Sports, isLogged, setIsLogged, Settings, BaseRate}}>
         {children}
         </Context.Provider>
     )

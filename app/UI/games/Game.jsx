@@ -5,7 +5,7 @@ import { placeE } from "@/app/lib/trigger";
 import { nowYouSee } from "@/app/lib/controlls";
 
 export default function Game({data}){
-    let {Settings} = useContext(Context);
+    let {Settings, BaseRate} = useContext(Context);
     let [settings, setSettings] = Settings;
     let defaultStake = settings.defaultStake;
     let odd = (stakes, pot)=>{
@@ -41,7 +41,7 @@ export default function Game({data}){
                             <div className="">{data.date}</div>
                         </div>
                     </div>
-                    <p className="mt-1">Total Stakes: <span className=" text-primary-light font-bold">KES {data.stakes.toLocaleString()}</span></p>
+                    <p className="mt-1">Total Stakes: <span className=" text-primary-light font-bold">{settings.currency.symbol} {(data.stakes*settings.currency.rate)}</span></p>
                 </div>
                 <div className="flex justify-between flex-grow gap-4">
                     {

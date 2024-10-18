@@ -2,6 +2,7 @@
 import { useState, useContext } from "react";
 import { Context } from "@/app/lib/ContextProvider";
 import Input from "@/app/UI/Input";
+import ConnectWallet from "@/app/UI/body/ConnectWallet";
 
 export default function Page() {
   let {Settings} = useContext(Context)
@@ -10,7 +11,7 @@ export default function Page() {
   const currencries = [
     {
       name: 'Kenyan Shilling',
-      symbol: 'Ksh',
+      symbol: 'KSH',
       rate: 1 // KSH/n
     },
     {
@@ -59,6 +60,11 @@ export default function Page() {
               Modify
             </button>
           </div>
+        </div>
+
+        <div>
+          <p className="font-semibold text-xl">Connect Wallet</p>
+          <ConnectWallet className="bg-primary-light block w-fit py-2 md:py-4 px-8 rounded-lg font-semibold lg:mt-8 hover:scale-105">Connect Crypto Wallet</ConnectWallet>
         </div>
     </main>
   );

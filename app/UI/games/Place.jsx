@@ -11,10 +11,10 @@ import {SolobetABI, soloAddress} from '@/app/abis/solobet.json';
 import { useWriteContract, useAccount } from "wagmi";
 import { config } from "@/app/lib/wagmi";
 import { parseEther } from "ethers";
-import { EthKsh, KshEth } from "@/app/lib/utils/currency";
+import { KshEth } from "@/app/lib/utils/currency";
 
 export default function Place(){
-    let {isLogged, Settings} = useContext(Context);
+    let {isLogged, Settings, BaseRate} = useContext(Context);
     let [settings, setSettings] = Settings;
     let [amount, setAmount] = useState(settings.defaultStake);
     let [match, setMatch] = useState('');
@@ -44,7 +44,6 @@ export default function Place(){
     }
 
     useEffect(()=>{
-        console.log(KshEth(amount))
         window.addEventListener('place', e=>handler(e))
         return ()=>window.removeEventListener('place', e=>handler(e))
     },[])
@@ -52,15 +51,17 @@ export default function Place(){
     useEffect(()=>{
         if(amount == NaN) setAmount(0)
         const newAward = ((amount / (stakes + amount)) * pot + amount);
-        if (newAward == NaN) awardRef.current.innerText = `KES ${0.00}`;
-        else awardRef.current.innerText = `KES ${newAward.toFixed(2)}`;
+        if (newAward == NaN) awardRef.current.innerText = `KSH ${0.00}`;
+        else awardRef.current.innerText = `KSH ${newAward.toFixed(2)}`;
     },[amount])
 
     let handler = e => {
-        outcomeRef.current = e.detail.game.outcome
+        if(e.detail.game.outcome==0)   outcomeRef.current = 1;
+        if(e.detail.game.outcome==1)   outcomeRef.current = 0;
+        if(e.detail.game.outcome==2)   outcomeRef.current = 2;
         idRef.current = e.detail.game.id
         setMatch(e.detail.game.match)
-        awardRef.current.innerText = `KES ${((amount/(e.detail.game.choice.stake+amount))*e.detail.game.pot+amount).toFixed(2)}`;
+        awardRef.current.innerText = `KSH ${((amount/(e.detail.game.choice.stake+amount))*e.detail.game.pot+amount).toFixed(2)}`;
         setPot(e.detail.game.pot)
         setUsers(e.detail.game.choice.users)
         setStakes(e.detail.game.choice.stake)
@@ -114,7 +115,7 @@ export default function Place(){
                 <Input value={amount} setValue={setAmount} placeholder={'Enter Stake'} type={'number'} name={'Stake (KES)'}/>
                 <p className="my-3">Possible Win: <span ref={awardRef} className="font-bold text-Success"></span></p>
                 <div className="flex justify-between">
-                    <p className="flex-grow border-r-[1px] border-Grey">Total Stakes: <span className="font-bold">KES {stakes.toLocaleString()}</span></p>
+                    <p className="flex-grow border-r-[1px] border-Grey">Total Stakes: <span className="font-bold">KSH {stakes.toLocaleString()}</span></p>
                     <p className="flex-grow text-right">Users: <span className="font-bold"> {users.toLocaleString()}</span></p>
                 </div>
             </div>
