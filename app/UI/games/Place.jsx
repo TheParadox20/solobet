@@ -31,17 +31,18 @@ export default function Place(){
     let {mutate} = useBetslip();
 
     const account = useAccount()
-    const { writeContract, data:txHash, status:writeStatus, error:writeError, isPending:writePending } = useWriteContract({config,})
+    const { writeContract, data:txHash, status:writeStatus, error:writeError, isPending:writePending } = useWriteContract({config,mutation:{
+        onSuccess:()=>{
+            postData((_)=>{popupE('Success',`Bet placed`)},{
+                game: idRef.current,
+                amount,
+                choice: outcomeRef.current,
+                web3:true
+            },'/bet/place')
+        }
+    }})
     if(writePending) popupE('Processing', 'Accept transaction in wallet')
     if(writeError) popupE('Error',writeError.message)
-    if(txHash){
-        postData((_)=>{popupE('Success',`TxHash: ${txHash}`)},{
-            game: idRef.current,
-            amount,
-            choice: outcomeRef.current,
-            web3:true
-        },'/bet/place')
-    }
 
     useEffect(()=>{
         window.addEventListener('place', e=>handler(e))
