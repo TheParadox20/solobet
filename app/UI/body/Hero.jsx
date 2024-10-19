@@ -45,9 +45,35 @@ function Crypto({key}){
     </div>
   )
 }
+function Future({key}){
+  return(
+    <div className="bg-[url('/future.png')] rounded-lg relative z-20 bg-cover mb-8">
+      <div className="z-10 bg-black/50  p-4">
+        <h2 className="text-3xl font-bold">Bet on the Future!</h2>
+        <p className="my-3 w-3/4">
+        Welcome to Solobet{"\`"}s Prediction Market—where your insights matter. From sports and politics to crypto and world events, predict outcomes and win big!
+        </p>
+        <Link href={'/P2E'} className="bg-primary-light block w-fit py-2 md:py-4 px-8 rounded-lg font-semibold lg:mt-8 hover:scale-105">Explore Predictions</Link>
+      </div>
+    </div>
+  )
+}
+function Gaming({key}){
+  return(
+    <div className="bg-[url('/gamers.png')] rounded-lg relative z-20 mb-8 bg-auto">
+      <div className="z-10 bg-black/50  p-4">
+        <h2 className="text-3xl font-bold">Stake, Compete, Earn!</h2>
+        <p className="my-3 w-3/4">
+        Step into Solobet{"\'"}s Gamers{"\'"} Lounge—where gaming meets rewards. Whether you{"\'"}re into FPS, RPG, or sports games, connect with players, place bets, and earn while enjoying your favorite multiplayer games
+        </p>
+        <Link href={'/P2E'} className="bg-primary-light block w-fit py-2 md:py-4 px-8 rounded-lg font-semibold lg:mt-8 hover:scale-105">Join The Action</Link>
+      </div>
+    </div>
+  )
+}
 
 export default function Carousel() {
-  const items = [<Welcome key={'welcome'} />, <Instant key={'instant'} />, <Crypto key={'crypto'} />];
+  const items = [<Welcome key={'welcome'} />, <Crypto key={'crypto'} />,<Future key={'future'} />,<Gaming key={'gaming'} />, <Instant key={'instant'} />];
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
