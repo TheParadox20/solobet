@@ -16,7 +16,7 @@ export default function Prediction({data}) {
             </div>
             {
                 data.options?
-                <div className="overflow-y-auto max-h-[12vh] pr-4">
+                <div className="overflow-y-auto max-h-[12vh] pr-4 large-scroll-2">
                     {
                         data.options.map((option,i)=>{
                             return(

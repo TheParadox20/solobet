@@ -2,7 +2,6 @@
 import useSWR from "swr";
 import { useState } from "react";
 import { fetcher, getData } from "@/app/lib/data";
-import { popupE } from "@/app/lib/trigger";
 import Spinner from "@/app/UI/body/Spinner";
 import Overlay from "@/app/UI/body/Overlay";
 import BetInfo from "./BetInfo";
@@ -35,11 +34,24 @@ export default function Close(){
                         <div key={bet.id} className="flex justify-between items-center p-2 border-b border-gray-200">
                             <div>
                                 <p>{bet.options[0]} vs {bet.options[1]}</p>
-                                <p className="text-xs text-gray-500">{bet.date}</p>
+                                <p className="text-xs mt-2 text-gray-500">{bet.date}</p>
                             </div>
                             <div>
                                 <div className="font-semibold">{bet.sport}</div>
-                                <div className="text-xs text-gray-500">{bet.category}</div>
+                                <button 
+                                    onClick={e=>{navigator.clipboard.writeText((bet.id).toString())}} 
+                                    className="flex items-center text-sm mt-2 text-gray-500"
+                                >
+                                    {bet.id} 
+                                    {
+                                        // navigator.clipboard.readText().then((text)=>{return text==(bet.id).toString()})?
+                                        false?
+                                        <span className="w-5 h-5 icon-[tabler--copy-check-filled]"/>
+                                        :
+                                        <span className="w-5 h-5 icon-[octicon--copy-24]"/>
+                                        
+                                    }
+                                </button>
                             </div>
                             {
                                 bet.outcomes.map((outcome, i)=>{

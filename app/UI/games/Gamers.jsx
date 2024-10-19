@@ -3,7 +3,7 @@ export default function Gamers({data}) {
         <div className="bg-primary-base rounded-md">
             <div className="p-2">
                 <div className="flex gap-3 mb-4">
-                    <img className="rounded-lg w-16 h-20" src={data.thumbnail} alt="" />
+                    <img className="rounded-lg w-16 h-20 object-cover" src={data.thumbnail} alt="" />
                     <div className="flex flex-col">
                         <p className="font-semibold">{data.title}</p>
                         <p className="font-light mt-1 text-sm">{data.devices}</p>

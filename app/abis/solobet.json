@@ -1,5 +1,5 @@
 {
-    "soloAddress":"0xE83C84C35F03C6d28863D590424Da7bEc938535D",
+    "soloAddress":"0x5ac7DF8994Ba26ff6e7b3Af2Ddd28ab05695BAF2",
     "SolobetABI":[
         {
             "anonymous": false,
@@ -64,6 +64,24 @@
         {
             "inputs": [
                 {
+                    "internalType": "address payable",
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "fund",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
                     "internalType": "string",
                     "name": "betID",
                     "type": "string"
@@ -103,6 +121,19 @@
             "inputs": [],
             "stateMutability": "nonpayable",
             "type": "constructor"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "withdraw",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
             "inputs": [],

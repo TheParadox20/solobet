@@ -11,27 +11,6 @@ import Casino from "@/app/UI/games/Casino";
 export default function P2E() {
   let path = usePathname().replaceAll('%20',' ');
   let { data, error, isLoading, mutate } = useSWR(['/p2e',{}], fetcher);
-  let prediction = {
-    thumbnail: 'https://via.placeholder.com/150',
-    title:'Presidential Election Winner',
-    stakes:12740,
-    options:[
-      {name:'Joe Biden', percentage:12},
-      {name:'Donald Trump', percentage:15},
-      {name:'Kanye West', percentage:20}
-    ],
-    chats:324
-  }
-  let game = {
-    thumbnail: 'https://via.placeholder.com/150',
-    title:'Call of Duty: Warzone',
-    devices:'Xbox/PS Tournament',
-    fee:200,
-    seats:7,
-    prizes:2000,
-    start:'Sat 12 Jun, 02:30 pm',
-  }
-  let casino = {}
 
   return(
     <main>
@@ -51,8 +30,7 @@ export default function P2E() {
           isLoading || error?
           <div className="flex justify-center w-full h-[20vh]"><Spinner full={false}/></div>
           :
-          // data && data.predictions.map((prediction,i)=>{
-            [...new Array(6)].map((_,i)=>{
+          data && data.prediction_markets.map((prediction,i)=>{
             return <div key={i} className=""><Prediction data={prediction}/></div>
           })
         }
@@ -71,8 +49,7 @@ export default function P2E() {
           isLoading || error?
           <div className="flex justify-center w-full h-[20vh]"><Spinner full={false}/></div>
           :
-          // data && data.games.map((game,i)=>{
-            [...new Array(6)].map((_,i)=>{
+          data && data.gamers_lounge.map((game,i)=>{
             return <div key={i} className=""><Gamers data={game}/></div>
           })
         }
