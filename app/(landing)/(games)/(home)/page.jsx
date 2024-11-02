@@ -9,7 +9,7 @@ import Prediction from "@/app/UI/games/Prediction";
 import SportIcon from "@/app/UI/SportsIcon";
 
 export default function Page() {
-  let { data, error, isLoading } = useSWR(['/home',{}], fetcher);
+  let { data, error, isLoading } = useSWR(['/home',{},process.env.NEXT_PUBLIC_API_KEY], fetcher);
   
   return (
     <div className="lg:mt-7">
